@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" class="height-full" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ghas-compliance | built with Probot</title>
+    <link rel="icon" href="/probot/static/probot-head.png">
+    <link rel="stylesheet" href="/probot/static/primer.css">
+  </head>
+  <body class="height-full bg-gray-light">
+    <div class="d-flex flex-column flex-justify-center flex-items-center text-center height-full">
+      <img src="/probot/static/robot.svg" alt="Probot Logo" width="100" class="mb-6">
+      <div class="box-shadow rounded-2 border p-6 bg-white">
+        <h1>
+          GHAS Compliance App
+            <span class="Label Label--outline v-align-middle ml-2 text-gray-light">v1.0.0</span>
+        </h1>
+
+          <p>Enable GHAS Compliance</p>
+      </div>
+
+      <div class="mt-4 text-left">
+{{!-- 
+If startment runs if variable exists 
+or isn't assigned to an eempty value 
+--}}
+{{#if results}}
+<ul>
+    {{!-- 
+    In code below "each" interates over the "polls" property and 
+    "this.name" refers to the property inside the array of objects
+    --}}
+    {{#each results}}
+        {{#if this.success}}
+            <p>&#9989; {{this.message}}</p>
+        {{else}}
+            <p>&#10060; {{this.message}}</p>
+        {{/if}}
+    {{/each}}
+</ul>
+{{!-- 
+Else startment runs if DOESN'T variable exist
+or IS assigned to an eempty value 
+--}}
+{{else}}
+    <p><em>There are currently no results.</em></p>
+{{/if}}
+      </div>
+    </div>
+  </body>
+</html>

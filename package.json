@@ -1,26 +1,44 @@
 {
-  "name": "ecs-compliance",
+  "name": "ghas-compliance",
   "version": "1.0.0",
   "private": true,
   "description": "App to set compliance policies",
   "author": "Yadhav Jayaraman <decyjphr@github.com>",
   "license": "ISC",
-  "homepage": "https://github.com/decyjphr-org/ecs-compliance",
+  "homepage": "https://github.com/decyjphr-org/ghas-compliance",
   "keywords": [
     "probot",
     "github",
     "probot-app"
   ],
   "scripts": {
+    "dev": "nodemon",
     "start": "probot run ./index.js",
-    "test": "jest"
+    "test": "npm-run-all --print-label --parallel lint:* --parallel test:*",
+    "lint:es": "eslint .",
+    "lint:js": "standard",
+    "lint:lockfile": "lockfile-lint --path package-lock.json --type npm --validate-https --allowed-hosts npm",
+    "lint:engines": "check-engine",
+    "lint:peer": "npm ls >/dev/null",
+    "test:unit": "jest 'test/unit/'",
+    "test:me": "jest ",
+    "test:unit:watch": "npm run test:unit -- --watch",
+    "test:integration": "jest 'test/integration/'",
+    "test:integration:debug": "LOG_LEVEL=debug DEBUG=nock run-s test:integration"
   },
   "dependencies": {
-    "probot": "^11.0.1"
+    "js-yaml": "^4.1.0",
+    "probot": "12.2.0"
   },
   "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.2",
+    "eslint-plugin-promise": "^6.0.0",
     "jest": "^26.6.3",
     "nock": "^13.0.5",
+    "nodemon": "^2.0.16",
     "smee-client": "^1.2.2"
   },
   "engines": {
@@ -28,5 +46,12 @@
   },
   "jest": {
     "testEnvironment": "node"
+  },
+  "nodemonConfig": {
+    "exec": "npm start",
+    "watch": [
+      ".env",
+      "."
+    ]
   }
 }
