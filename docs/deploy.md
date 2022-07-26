@@ -38,7 +38,7 @@ Every deployment will need an [App](https://developer.github.com/apps/).
 - repository_dispatch
 
 ### Install
-1. Download the private key from the app.
+1. Download the private key from the app. **Save** the private key: it will be needed later.
 1. Make sure that you click the green **Install** button on the top left of the app page. 
 2. This gives you an option of installing the app on all or a subset of your repositories. __**Important: Install this App for `All` repos in the Org**__
 
