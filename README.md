@@ -25,7 +25,7 @@ graph TD
     PR8 --> PR7((end))
     PR6 --> PR7
 
-    DPR1[User dismisses alert] -->|Webhook| DPR2{`GHAS Compliance` Is the app NCNIA?}
+    DPR1[User dismisses alert] -->|Webhook| DPR2{Non-critical app}
     DPR2 -->|Yes| DPR8[Allow Dismiss]
     DPR2 -->|No| DPR4[[`GHAS Compliance` check for compliance]]
     DPR4 -->|Pass| DPR8
