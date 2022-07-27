@@ -12,7 +12,7 @@ graph TD
     C --> D[[`GHAS Compliance` enable Codescanning and secret scanning]]
     D --> E((End))
 
-    PR1[User wants to merge] --> PR2(Pull Request)
+    PR1[User wants to merge] --> |Opens|PR2(Pull Request)
     PR2 -->|Webhook| PR3[CI code scan]
     PR3 -->|upload results with ref and sha| PR4((done))
     PR11[More commits] -->|Webhook| PR3
