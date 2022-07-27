@@ -129,6 +129,24 @@ This will start the container in the background and detached.
   - `sudo docker exec -it ghas-compliance /bin/sh`
 - You will now be inside the running **Docker** container and can perform any troubleshooting needed
 
+### Deploy the app in Kubernetes
+
+#### Deploying using kubectl
+- Create and push your image to a container registry
+- Create a `imagePullSecret` 
+  - For e.g. 
+	   `kubectl create secret docker-registry regcred --docker-server=DOCKER_REGISTRY_SERVER --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL`   
+- Create app secrets from the `.env` file
+    `kubectl create secret generic app-env --from-env-file=.env`
+- Deploy the app
+    `kubectl apply -f ghas-compliance.yml`
+> **_NOTE:_**  If your secrets' names are different; modify them in the deployment yaml.
+- Expose the app using a service
+    `kubectl apply -f svc-ghas-compliance.yml`
+
+#### Deploying using helm
+:construction:
+
 
 ### Deploy the app in Heroku
 
@@ -193,4 +211,5 @@ To deploy multiple apps in one instance, create a new app that has the existing 
   }
 }
 ```
+
 
