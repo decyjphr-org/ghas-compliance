@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ghas-compliance
+  name: ghas-compliance
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: ghas-compliance
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ghas-compliance
+    spec:
+      containers:
+      - image: docker.io/yadhav/ghas-compliance:latest
+        name: ghas-compliance
+        envFrom:
+        - secretRef: 
+            name: app-env
+      imagePullSecrets:
+        - name: regcred
+        
