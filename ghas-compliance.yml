@@ -20,11 +20,14 @@ spec:
         app: ghas-compliance
     spec:
       containers:
-      - image: docker.io/yadhav/ghas-compliance:latest
+      - image: docker.io/yadhav/ghas-compliance:0.1.0
         name: ghas-compliance
         envFrom:
         - secretRef: 
             name: app-env
+        ports:
+        - name: http
+          containerPort: 3000
       imagePullSecrets:
         - name: regcred
         

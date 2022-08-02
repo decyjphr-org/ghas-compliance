@@ -144,8 +144,40 @@ This will start the container in the background and detached.
 - Expose the app using a service
     `kubectl apply -f svc-ghas-compliance.yml`
 
-#### Deploying using helm
-:construction:
+#### Deploying using [helm](https://docs.helm.sh/using_helm/#Install-Helm)
+
+[Helm](https://helm.sh/) must be installed to use the charts. Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
+
+Once Helm is set up properly, add the repo as follows:
+
+```bash
+$ helm repo add decyjphr https://decyjphr-org.github.io/charts/
+```
+
+Run `helm search repo ghas-compliance` to see the charts.
+
+Run `helm show values decyjphr/ghas-compliance` to see the values.
+
+Install template with values for APP_ID, PRIVATE_KEY, WEBHOOK_SECRET using `--values` (Preferred approach)
+```bash
+helm install ghas-compliance decyjphr/ghas-compliance --values myvalues.yaml
+```
+
+Install template with values for APP_ID, PRIVATE_KEY, WEBHOOK_SECRET using `--set`
+```bash
+helm install ghas-compliance decyjphr/ghas-compliance --set appEnv.APP_ID="\"0000\"" --set appEnv.PRIVATE_KEY="TFM...==" --set appEnv.WEBHOOK_SECRET="ZjZlYTFjN...=="
+```
+
+Generate Kubernetes YAMLs
+```bash
+helm template ghas-compliance decyjphr/ghas-compliance --values myvalues.yaml
+```
+
+Chart documentation is available in [decyjphr charts repo](https://github.com/decyjphr-org/charts/).
+
+*See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation.*
+
+
 
 
 ### Deploy the app in Heroku
