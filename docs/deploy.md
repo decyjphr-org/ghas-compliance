@@ -177,7 +177,30 @@ Chart documentation is available in [decyjphr charts repo](https://github.com/de
 
 *See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation.*
 
+**Consider using a custom image**
 
+For production use cases one should consider to build a custom GHAS-Compliance app image which conforms to your org standards. 
+
+The [repository](https://github.com/decyjphr-org/ghas-compliance) contains [documentation](https://github.com/decyjphr-org/ghas-compliance/blob/main/docs/deploy.md#build-the-docker-container) how to do it.
+
+
+NOTE: If you want a reproducible build then you should specify a non floating tag for the image `yadhav/ghas-compliance:2.249.3` .
+
+Once you built the image and pushed it to your registry you can specify it in your values file like this:
+
+```yaml
+image:
+  repository: yadhav/ghas-compliance
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+```
+
+In case you are using a private registry you can use 'imagePullSecretName' to specify the name of the secret to use when pulling the image:
+
+```yaml
+imagePullSecrets: [regcred]
+```
 
 
 ### Deploy the app in Heroku
