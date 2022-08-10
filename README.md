@@ -2,6 +2,9 @@
 
 A GitHub App built with [Probot](https://github.com/probot/probot) for enforcing GHAS compliance policies.  
 App will block merges for high severity alerts for critical apps and allow merges of PRs for non-critical, no-internet access (NCNIA) apps.  
+
+
+## Workflows
 The various workflows this app will address are illustrated below:
 
 
@@ -32,6 +35,51 @@ graph TD
     DPR4 -->|Fail| DPR5(Reopen the alert)
     DPR8 --> DPR6((end))
     DPR5 --> DPR6
+```
+
+## Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    Jenkins Migration-->>+GHAS Compliance App: [Webhook] Repository Dispatch(Enable GHAS)
+    GHAS Compliance App->>+GitHub: Create `GHAS Compliance` Check Run
+    GHAS Compliance App->>GitHub: Complete `GHAS Compliance` Check Run
+    GHAS Compliance App->>GitHub: Create Branch protection
+    GHAS Compliance App->>GitHub: Enable Adv Sec: Code Scanning
+    GitHub-->>-GHAS Compliance App: Done
+    GHAS Compliance App-->>-Jenkins Migration: Done
+
+
+    Developer->>+GitHub:Create PR
+    GitHub-->>+GHAS Compliance App: [Webhook] PR Opened
+    GitHub-->>+Jenkins CI: [Webhook] PR Opened
+    GHAS Compliance App->>GitHub: Create `GHAS Compliance` Check Run
+    GHAS Compliance App->>GitHub: Check for other pending Check Runs
+    Jenkins CI->>GitHub: Create `Jenkins` Check Run
+    Jenkins CI->>Jenkins CI: Build and Scan
+    Jenkins CI->>GitHub: Upload Scan Results
+    Jenkins CI->>GitHub: Complete `Jenkins` Check Run
+    Jenkins CI-->>-GitHub: Done
+    GHAS Compliance App->>GHAS Compliance App: No other pending Check Runs
+    GHAS Compliance App->>GHAS Compliance App: Run policy checks
+    GHAS Compliance App->>-GitHub: Complete `GHAS Compliance` Check Run
+    GitHub-->>-Developer:Checks Complete
+
+
+    Developer->>+GitHub:Commit to the Branch
+    GitHub-->>+GHAS Compliance App: [Webhook] Check Suite Created
+    GitHub-->>+Jenkins CI: [Webhook] Check Suite Created
+    GHAS Compliance App->>GitHub: Create `GHAS Compliance` Check Run
+    GHAS Compliance App->>GitHub: Check for other pending Check Runs
+    Jenkins CI->>GitHub: Create `Jenkins` Check Run
+    Jenkins CI->>Jenkins CI: Build and Scan
+    Jenkins CI->>GitHub: Upload Scan Results
+    Jenkins CI->>GitHub: Complete `Jenkins` Check Run
+    Jenkins CI-->>-GitHub: Done
+    GHAS Compliance App->>GHAS Compliance App: No other pending Check Runs
+    GHAS Compliance App->>GHAS Compliance App: Run policy checks
+    GHAS Compliance App->>-GitHub: Complete `GHAS Compliance` Check Run
+    GitHub-->>-Developer:Checks Complete
 ```
 ## Setup
 
