@@ -129,7 +129,6 @@ This will start the container in the background and detached.
   - `sudo docker exec -it ghas-compliance /bin/sh`
 - You will now be inside the running **Docker** container and can perform any troubleshooting needed
 
-
 ### Deploy the app to AWS Lambda
 [Serverless Framework Deployment of GHAS Compliance on AWS](AWS-README.md)
 ### Deploy the app in Kubernetes
