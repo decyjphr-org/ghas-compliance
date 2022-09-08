@@ -64,7 +64,7 @@ ref: main
 
     console.log(`${JSON.stringify(await policyManager.getPolicy())}`)
     
-    expect(await policyManager.skipCheckAlways()).toBeTruthy()
+    expect(await policyManager.skipCheckAlways()).toBeFalsy()
 
     expect(await policyManager.createInitialCheck()).toBeTruthy()
 
@@ -72,9 +72,9 @@ ref: main
 
     expect(await policyManager.enableAdvSec()).toBeTruthy()
 
-    expect(await policyManager.getSnooze()).toBe(100)
+    expect(await policyManager.getSnooze()).toBe(20)
 
-    
+    expect(await policyManager.getTopics()).toContain('ncnia')
     // context = {
     //   payload: {
     //     action: "ghas-enable",
