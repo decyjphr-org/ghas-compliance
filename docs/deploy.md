@@ -203,7 +203,8 @@ In case you are using a private registry you can use 'imagePullSecretName' to sp
 ```yaml
 imagePullSecrets: [regcred]
 ```
-
+### Running the app with an HTTPS server
+In order to meet compliance needs of enterprises that require the traffic to the app to be encrypted, we have provided an [HTTPS Server to run the app](HTTPS-Server.md)
 
 ### Deploy the app in Heroku
 

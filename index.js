@@ -2,6 +2,7 @@ const { handleCheckSuite } = require('./lib/checkSuite')
 const { handlePull } = require('./lib/pullRequest')
 const { handleCheckRun } = require('./lib/checkRun')
 const { handleCodeScanningAlert } = require('./lib/codeScanningAlert')
+const { handleSecretScanningAlert } = require('./lib/secretScanningAlert')
 const { handleRepoDispatch } = require('./lib/repoDispatch')
 // Probot App to enable GHAS and set up GHAS Compliance checks
 // For more information on probot apps:
@@ -28,6 +29,9 @@ module.exports = (app, { getRouter }) => {
   })
   app.on(['code_scanning_alert.closed_by_user'], (context) => {
     return callHandlerWithTiming(context, app, handleCodeScanningAlert)
+  })
+  app.on(['secret_scanning_alert.resolved'], (context) => {
+    return callHandlerWithTiming(context, app, handleSecretScanningAlert)
   })
 }
 function callHandlerWithTiming(context, app, handler) {

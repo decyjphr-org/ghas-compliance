@@ -23,5 +23,8 @@ licensing:
       - "AGPL-*"
 
 secretscanning:
-  level: all
+  conditions:
+    types: 
+    - "*"
+    - "amazon*"
 
