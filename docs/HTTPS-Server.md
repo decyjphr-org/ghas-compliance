@@ -5,11 +5,19 @@ In order to meet compliance needs of enterprises that require the traffic to the
 
 
 
-To run `GHAS Compliance` app as HTTPS, you should bring your `cert` and `private key`, and provide the path values for them in the .env file (it could be relative or full path for the cert files). The env variables needed are below:
+To run `GHAS Compliance` app as HTTPS, you should bring your `cert` and `private key`.   
+You can provide the path values for them in the .env file (it could be relative or full path for the cert files). The env variables needed are below:
 key | path
 -- | --
 TLS_KEY_PATH | /etc/ghas-compliance/ssl/your-private-key.pem
 TLS_CERT_PATH | /etc/ghas-compliance/ssl/your-cert.pem
+
+Or you can provide the BASE64 encoded values directly using the env variables below:
+key | path
+-- | --
+TLS_KEY | <base64 encoded value>
+TLS_CERT | <base64 encoded value>
+
 
 We have modified the `Dockerfile` file to run the app using the custom HTTPS Server instead of the `probot` app, i.e instead of using CMD  `npm start`, it will run CMD `node httpsapp.js`. 
 

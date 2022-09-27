@@ -34,14 +34,17 @@ policy:
 ## Workflows
 The various workflows this app will address are illustrated below:
 
-
+### On-Demand Post-Migration Workflow
 ```mermaid
 graph TD
     A(Migration complete) -->|Enable GHAS | B[[`GHAS Compliance` create an initial check]]
     B --> C[[`GHAS Compliance` create branch protections with the required checks]]
     C --> D[[`GHAS Compliance` enable Codescanning and secret scanning]]
     D --> E((End))
-
+```
+### PR based GHAS Compliance Workflow
+```mermaid
+graph TD
     PR1[User wants to merge] --> |Opens|PR2(Pull Request)
     PR2 -->|Webhook| PR3[CI code scan]
     PR3 -->|upload results with ref and sha| PR4((done))
@@ -54,14 +57,28 @@ graph TD
     PR6 --> PR11
     PR8 --> PR7((end))
     PR6 --> PR7
-
+```
+### Alert Dismissal Workflow
+```mermaid
+graph TD
     DPR1[User dismisses alert] -->|Webhook| DPR2{Non-critical app}
     DPR2 -->|Yes| DPR8[Allow Dismiss]
-    DPR2 -->|No| DPR4[[`GHAS Compliance` check for compliance]]
+    DPR2 -->|No| DPR4[[`GHAS Compliance` check run]]
     DPR4 -->|Pass| DPR8
     DPR4 -->|Fail| DPR5(Reopen the alert)
     DPR8 --> DPR6((end))
     DPR5 --> DPR6
+```
+
+### On-Demand GHAS Compliance Workflow
+```mermaid
+graph TD
+    PR1[Post Jenkins Build] --> |Function|PR2(Trigger Repo Dispatch for Compliance Check)
+    PR2 -->|Webhook with Ref, SHA| PR5[[`GHAS Compliance` check run]]
+    PR5 -->|Pass| PR6[Show fa:fa-check and don't block]
+    PR5 -->|Fail| PR7[Show fa:fa-x but don't block]
+    PR6 --> PR8((end))
+    PR7 --> PR8((end))
 ```
 
 ## Sequence Diagram
