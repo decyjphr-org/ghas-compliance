@@ -38,25 +38,56 @@ policies:
     topicsExcludesAll: ['mobileapplication-yes']
 ```
 
-
-## Consequences
-How often do we load the policies? 
-- For every webhook event
-    - how will the app scale if there are thousands of events?
-        - what happens when there are thousands of events?
-            - the policy files will be loaded using the api and run into abuse limits
+## Open Items
+How often will the api to load policies be called? 
+- For every webhook event?
+    - Will the app scale if there are thousands of events?
+        - Will the app run into abuse limits?
+            - Yes, but can we prevent it?
                 - probot app can handle abuse limits by backing off automatically
-            - the loading of policy files will run into rate limits if there are more than 15000 requests per hour
-        - what happens when there are 1000s of policy files?
-            - we only load the required policy file for a given repo for every webhook event
-            - we will load the policy selector file for every webhook event
-- Once when the app is started
+        - Will the app run into rate limits
+            - Yes, if there are more than 15000 requests per hour
+    - Will the app scale when there are 1000s of policy files?
+        - Yes, we only load the required policy files not all the files
+    - Will this guarantee that the latest policies are loaded every time
+        - Yes
     - how will be get the appropriate policies
+        - policy selector will be loaded every time
+        - filtered policy files will be loaded every time
+    - how will be get updates or new files? 
+        - files will be loaded everytime
+    - How will the app know when the policy file has changed?
+        - Not an issue since files will be loaded everytime
+            
+- Once when the app is started
+    - Will the app scale if there are thousands of events?
+        - Yes, since the policy is only loaded once
+    - Will the app scale when there are 1000s of policy files?
+        - Yes, since the policy is only loaded once
+    - Will this guarantee that the latest policies are loaded every time
+        - No
+    - how will be get the appropriate policies
+        - all policies are stored in a singleton map
+        - policy selector is stored as a singleton
+    - how will we get updates or new files? 
+        - restart the app 
+    - How will the app know when the policy file has changed?
+        - App will not know, there has to be a restart
+
+- Once when the app is loaded and whenever the policy files change
+    - Will the app scale if there are thousands of events?
+        - Yes, the policy file is loaded once and reloaded only when there is a change
+    - Will the app scale when there are 1000s of policy files?
+        - Yes, we only load the required policy files not all the files
+    - Will this guarantee that the latest policies are loaded every time
+        - No
+    - how will we get the appropriate policies
         - all policies are stored in a singleton map
         - policy selector is stored as a singleton
     - how will be get updates or new files? 
         - restart the app 
-- Once when the app is loaded and whenever the policy files change
+    - How will the app know when the policy file has changed?
+        - App will not know, there has to be a restart
   - How will the app know when the policy file has changed?
     - push event?
         - can the GHAS compliance listen to push events and ignore if it is not policy file changes?
@@ -65,16 +96,24 @@ How often do we load the policies?
               - how will the app know what is a policy repo?
                 - from the runtime settings
 
-What if mutiple policies match
-    - apply the first one
-        - can we assume there will only be one policy for a given topic?
-    - apply all of them sequentially
-        - can we assume an order
-    - deep merge all the matched policy objects
-        - Could the previous option solve for most use cases?
-            - It would for the current set of requirements
+What if mutiple policies match?
+- apply the first one
+    - What happens if there are more than one policy for a repo?
+        - First one is applied
+    - Is there a sequence to follow?
+        - Order matters
+- apply all of them sequentially
+    - What happens if there are more than one policy for a repo?
+        - all of them are applied
+    - Is there a sequence to follow?
+        - Order does not matter
+- deep merge all the matched policy objects
+    - What happens if there are more than one policy for a repo?
+        - all of them are applied
+    - Is there a sequence to follow?
+        - Order does not matter
             
-
+## Consequences
 ## Discarded solutions
 
 <If other solutions were considered those should be mentioned here including why those were discarded.
