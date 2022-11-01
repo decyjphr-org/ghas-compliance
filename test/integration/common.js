@@ -1,7 +1,10 @@
 const { createProbot } = require('probot')
+const { pino } = require('pino')
+const { getTransformStream } = require('@probot/pino')
 const nock = require('nock')
 const any = require('@travi/any')
 const complianceBot = require('../../index')
+
 //const settings = require('../../lib/settings')
 
 nock.disableNetConnect()
@@ -33,21 +36,23 @@ OsZdcDvDC5GtgcywHsYeOWHldgDWY1S8Z/PUo4eK9qBXYBXp3JEZQ1dqzFdz+Txi
 rBn2WsFLsxV9j2/ugm0PqWVBcU2bPUCwvaRu3SOms2teaLwGCkhr
 -----END RSA PRIVATE KEY-----`
 const repository = {
-  default_branch: 'master',
-  name: 'botland',
+  default_branch: 'main',
+  name: 'decyjphr-ado-migration2',
   owner: {
-    name: 'bkeepers-inc',
+    name: 'decyjphr-org',
     email: null
   }
 }
 
 function loadInstance () {
-  const probot = createProbot({env: {APP_ID: 1, PRIVATE_KEY: mockcert, githubToken: 'test' }})
+  const log = getLog('trace')
+  const probot = createProbot({env: {APP_ID: 1, PRIVATE_KEY: mockcert, githubToken: 'test', LOG_LEVEL: process.env.LOG_LEVEL }})
   probot.load(complianceBot)
   return probot
 }
 
 function initializeNock () {
+  nock.disableNetConnect()
   return nock('https://api.github.com')
 }
 
@@ -55,6 +60,22 @@ function teardownNock (githubScope) {
   expect(githubScope.isDone()).toBe(true)
 
   nock.cleanAll()
+}
+
+function cleanAll (githubScope) {
+  nock.cleanAll()
+}
+
+function getLog (logLevel, logMessageKey) {
+  const pinoOptions = {
+    level: logLevel || 'trace',
+    name: 'probot',
+    messageKey: logMessageKey || 'msg'
+  }
+
+  const transform = getTransformStream()
+  transform.pipe(pino.destination(1))
+  return pino(pinoOptions, transform)
 }
 
 function buildPushEvent () {
@@ -93,6 +114,7 @@ module.exports = {
   loadInstance,
   initializeNock,
   teardownNock,
+  cleanAll,
   buildTriggerEvent,
   buildRepositoryCreatedEvent,
   buildRepositoryEditedEvent,

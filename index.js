@@ -14,6 +14,17 @@ const { handleRepoDispatch } = require('./lib/repoDispatch')
  * @param {import('probot').Probot} app
  */
 module.exports = (app, { getRouter }) => {
+  // Provide an API endpoint for non-webhook automation
+  if (typeof getRouter === 'function') {
+    console.log(`router = ${JSON.stringify(getRouter)}`)
+    const router = getRouter('/ghas')
+  
+    // API to enable GHAS for the repo
+    router.get('/health', async (req, res) => {
+      res.end('success')
+    })
+  }
+
   // Webhook events that are being listened to
   app.on(['check_suite.requested', 'check_suite.rerequested'], (context) => {
     return callHandlerWithTiming(context, app, handleCheckSuite)
@@ -34,7 +45,7 @@ module.exports = (app, { getRouter }) => {
     return callHandlerWithTiming(context, app, handleSecretScanningAlert)
   })
 }
-function callHandlerWithTiming(context, app, handler) {
+function callHandlerWithTiming (context, app, handler) {
   const start = Date.now()
   handler(context, app.log).then(() => {
     if (context.payload.check_run && context.payload.check_run.name !== 'GHAS Compliance') {

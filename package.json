@@ -20,6 +20,7 @@
     "lint:lockfile": "lockfile-lint --path package-lock.json --type npm --validate-https --allowed-hosts npm",
     "lint:engines": "check-engine",
     "lint:peer": "npm ls >/dev/null",
+    "test:coverage": "jest --coverage",    
     "test:unit": "jest 'test/unit/'",
     "test:me": "jest ",
     "test:unit:watch": "npm run test:unit -- --watch",
