@@ -1,4 +1,4 @@
-# ghas-compliance
+# ghas-compliance 
 
 A GitHub App built with [Probot](https://github.com/probot/probot) for enforcing GHAS compliance policies.  
 App will block merges for high severity alerts for critical apps and allow merges of PRs for non-critical, no-internet access (NCNIA) apps.  
