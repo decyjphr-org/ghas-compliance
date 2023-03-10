@@ -1,5 +1,6 @@
-const { handleCheckSuite } = require('./lib/checkSuite')
-const { handlePull } = require('./lib/pullRequest')
+// Disabling pullRequest support for the future
+// const { handlePull } = require('./lib/pullRequest')
+// const { handleCheckSuite } = require('./lib/checkSuite')
 const { handleCheckRun } = require('./lib/checkRun')
 const { handleCodeScanningAlert } = require('./lib/codeScanningAlert')
 const { handleSecretScanningAlert } = require('./lib/secretScanningAlert')
@@ -13,25 +14,16 @@ const { handleRepoDispatch } = require('./lib/repoDispatch')
  * This is the main entrypoint
  * @param {import('probot').Probot} app
  */
-module.exports = (app, { getRouter }) => {
-  // Provide an API endpoint for non-webhook automation
-  if (typeof getRouter === 'function') {
-    console.log(`router = ${JSON.stringify(getRouter)}`)
-    const router = getRouter('/ghas')
-  
-    // API to enable GHAS for the repo
-    router.get('/health', async (req, res) => {
-      res.end('success')
-    })
-  }
-
+module.exports = (app) => {
   // Webhook events that are being listened to
-  app.on(['check_suite.requested', 'check_suite.rerequested'], (context) => {
-    return callHandlerWithTiming(context, app, handleCheckSuite)
-  })
-  app.on(['pull_request.opened', 'pull_request.reopened'], (context) => {
-    return callHandlerWithTiming(context, app, handlePull)
-  })
+
+  // Disabling pullRequest support for the future
+  // app.on(['check_suite.requested', 'check_suite.rerequested'], (context) => {
+  //   return callHandlerWithTiming(context, app, handleCheckSuite)
+  // })
+  // app.on(['pull_request.opened', 'pull_request.reopened'], (context) => {
+  //   return callHandlerWithTiming(context, app, handlePull)
+  // })
   app.on(['check_run.created', 'check_run.rerequested'], (context) => {
     return callHandlerWithTiming(context, app, handleCheckRun)
   })
@@ -46,33 +38,45 @@ module.exports = (app, { getRouter }) => {
   })
 }
 function callHandlerWithTiming (context, app, handler) {
+  // let id = ''
+
+  // switch (context.name) {
+  //   case 'check_run':
+  //     id += context.payload.check_run.url
+  //     break
+  //   case 'check_suite':
+  //     id += context.payload.check_suite.url
+  //     break
+  //   case 'pull_request':
+  //     id += context.payload.pull_request.url
+  //     break
+  //   case 'repository_dispatch':
+  //     id += context.payload.action
+  //     break
+  //   case 'code_scanning_alert':
+  //     id += context.payload.alert.url
+  //     break
+  // }
   const start = Date.now()
-  handler(context, app.log).then(() => {
+  const logger = app.log.child({
+    traceId: context.id,
+    event: context.name,
+    sender: context.payload.sender.login,
+    org: context.payload.organization.login,
+    repository: context.payload.repository.name
+  })
+  logger.info(`>>>> Started processing ${context.name} event <<<<`)
+  handler(context, logger).then(() => {
     if (context.payload.check_run && context.payload.check_run.name !== 'GHAS Compliance') {
-      // No need to log timing for events that are skipped
+      const elapsedMillis = Date.now() - start
+      logger.info({ responseTime: elapsedMillis }, `<<<< This is not a Check Run for GHAS Compliance App, So skipping...  ${context.name} : ${Math.floor(elapsedMillis / 1000)} secs >>>>`)
       return
     }
-    let id = ''
-    // = context.payload.repository.full_name + ': '
-    switch (context.name) {
-      case 'check_run':
-        id += context.payload.check_run.url
-        break
-      case 'check_suite':
-        id += context.payload.check_suite.url
-        break
-      case 'pull_request':
-        id += context.payload.pull_request.url
-        break
-      case 'repository_dispatch':
-        id += context.payload.action
-        break
-      case 'code_scanning_alert':
-        id += context.payload.alert.url
-        break
-    }
-
-    const millis = Date.now() - start
-    app.log.warn(`>>>> Timing for **${context.name}** ${id} : ${Math.floor(millis / 1000)} secs <<<<`)
+    const elapsedMillis = Date.now() - start
+    logger.info({ responseTime: elapsedMillis }, `<<<< Timing for ${context.name} : ${Math.floor(elapsedMillis / 1000)} secs >>>>`)
+  }).catch(e => {
+    // Ok to catch this error than bubbling it up since, this is Async code returning after the webhook response was sent
+    const elapsedMillis = Date.now() - start
+    logger.error({ responseTime: elapsedMillis }, `Unexpected error while processing webhook ${context.name} \n ${e.stack}`)
   })
 }

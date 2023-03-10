@@ -1,0 +1,75 @@
+branches:
+  protection:
+  patterns: []
+bypasschecks:
+  always: false
+  topics: ['ncnia']
+repodispatch:
+  createInitialCheck: false
+  createBranchProtection: false
+  enableAdvSec: false
+policy:
+  snooze: 0
+# policyPath:
+#   owner: 
+#   repo: 
+#   path: 
+#   ref: 
+emptyPolicy:
+  codescanning:
+    tools:
+      - Semgrep
+      - mobsf
+      - CodeQL
+    level: critical
+    conditions:
+      ids:
+        - "csrf-protection-disabled"
+        - "request-forgery"
+        - "spring-disabled-csrf-protection"
+        - "reflective-xss"
+        - "reflected-xss"
+        - "xss"
+        - "stored-xss"
+        - "xss-through-exception"
+        - "xss-local"
+        - "cgi-xss"
+
+      names: []
+      cwes:
+        - cwe-074 
+        - cwe-078 
+        - cwe-079
+        - cwe-080
+        - cwe-089 
+        - cwe-095
+        - cwe-114
+        - cwe-115
+        - cwe-121
+        - cwe-134
+        - cwe-190
+        - cwe-242
+        - cwe-287
+        - cwe-352
+        - cwe-434
+        - cwe-494 
+        - cwe-506
+        - cwe-564
+        - cwe-639
+        - cwe-749
+        - cwe-798
+        - cwe-943
+    ignores:
+      ids: []
+      names: []
+      cwes: []  
+  secretscanning:
+    conditions:
+      types: 
+      - "*"
+    ignores:
+      types: 
+      - "ECS*"
+      - "ecs*"
+      - "ECS *"
+      - "ecs *"

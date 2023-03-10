@@ -5,7 +5,6 @@ const path = require('path')
 // Requiring our fixtures
 const checkSuitePayload = require('./fixtures/check_suite.requested')
 const checkSuiteNoPRPayload = require('./fixtures/checksuite_requested_nopr.event')
-const checkRunSuccess = require('./fixtures/checkrun.created')
 const codescanningClosedPayload = require('./fixtures/codescanning_alert.closed')
 const secretscanningResolvedPayload = require('./fixtures/secretscanning_resolved.event.json')
 
