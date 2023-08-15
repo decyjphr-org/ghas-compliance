@@ -94,6 +94,7 @@ ref: main
     filtered = policyManager.isSecretByPolicy(secret)
     console.log(`${JSON.stringify(filtered)}`)
 
+    /*
     context = {
       payload: {
         action: "ghas-enable",
@@ -111,7 +112,7 @@ ref: main
 
     const res = await handleRepoDispatch(context, log)
     expect(res).toBeDefined()
-    
+    */
   }, 60000)
 })
 

@@ -80,9 +80,13 @@ describe('GHAS Compliance app', () => {
     .reply(200, checkRunsForRef)
     .get('/repos/decyjphr-org/decyjphr-ado-migration2/secret-scanning/alerts?state=open')
     .reply(200, secretScanningAlerts)
+    .get('/repos/decyjphr-org/decyjphr-ado-migration2/secret-scanning/alerts?state=open&per_page=100')
+    .reply(200, secretScanningAlerts)
     .get('/repos/decyjphr-org/decyjphr-ado-migration2/code-scanning/analyses?ref=refs%2Fheads%2Fadd-code')
     .reply(200, codeScanningAnalysis)
     .get('/repos/decyjphr-org/decyjphr-ado-migration2/code-scanning/alerts?ref=refs%2Fheads%2Fadd-code')
+    .reply(200,codeScanningAlerts)
+    .get('/repos/decyjphr-org/decyjphr-ado-migration2/code-scanning/alerts?ref=refs%2Fheads%2Fadd-code&per_page=100')
     .reply(200,codeScanningAlerts)
     .patch('/repos/decyjphr-org/decyjphr-ado-migration2/code-scanning/alerts/4')
     .reply(200)
@@ -102,73 +106,72 @@ describe('GHAS Compliance app', () => {
     teardownNock(githubScope)
     cleanAll(githubScope)
   })
-/*
+
   test('test repository_dispatch repositoryDispatchGhasEnablePayload', async () => {
     await probot.receive({ name: 'repository_dispatch', payload: repositoryDispatchGhasEnablePayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
 
   test('test repository_dispatch repositoryDispatchGhasEnablePayload', async () => {
     await probot.receive({ name: 'repository_dispatch', payload: repositoryDispatchGhasDisablePayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
   
   test('test repository_dispatch repositoryDispatchComplianceCheckPayload', async () => {
     await probot.receive({ name: 'repository_dispatch', payload: repositoryDispatchComplianceCheckPayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
-
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
+/*
   test('test check_suite', async () => {
     await probot.receive({ name: 'check_suite', payload: checkSuitePayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
   },30000)
 
   test('test check_suite no pr', async () => {
     await probot.receive({ name: 'check_suite', payload: checkSuiteNoPRPayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
   },30000)
-
+*/
   test('test check_run checkRunGHASCompliance', async () => {
     await probot.receive({ name: 'check_run', payload: checkRunGHASCompliance })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
 
   test('test pull_request opened', async () => {
     await probot.receive({ name: 'pull_request', payload: pullRequestOpened })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
 
   test('test code_scanning_alert revert', async () => {
     await probot.receive({ name: 'code_scanning_alert', payload: codescanningClosedPayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
 
   test('test code_scanning_alert', async () => {
     await probot.receive({ name: 'code_scanning_alert', payload: codescanningClosedPayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
 
   test('test secret_scanning_alert revert', async () => {
     await probot.receive({ name: 'secret_scanning_alert', payload: secretscanningResolvedPayload })
-    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
-    await snooze(25 * 1000)
-  },30000)
-*/
+    // const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
+    // await snooze(25 * 1000)
+  })
+
   test('test push protection secret_scanning_alert', async () => {
     await probot.receive({ name: 'secret_scanning_alert', payload: secretscanningCreatedPushProtectionPayload })
     //const snooze = ms => new Promise(resolve => setTimeout(resolve, ms))
     //await snooze(100 * 1000)
-    console.log('done')
-  },30000)
+  })
 
 })
 

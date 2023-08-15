@@ -9,7 +9,7 @@ repodispatch:
   createBranchProtection: false
   enableAdvSec: false
 policy:
-  snooze: 0
+  snooze: 20
 # policyPath:
 #   owner: 
 #   repo: 

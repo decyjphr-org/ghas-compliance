@@ -1,6 +1,6 @@
 // Disabling pullRequest support for the future
-// const { handlePull } = require('./lib/pullRequest')
-// const { handleCheckSuite } = require('./lib/checkSuite')
+const { handlePull } = require('./lib/pullRequest')
+const { handleCheckSuite } = require('./lib/checkSuite')
 const { handleCheckRun } = require('./lib/checkRun')
 const { handleCodeScanningAlert } = require('./lib/codeScanningAlert')
 const { handleSecretScanningAlert } = require('./lib/secretScanningAlert')
@@ -17,13 +17,12 @@ const { handleRepoDispatch } = require('./lib/repoDispatch')
 module.exports = (app) => {
   // Webhook events that are being listened to
 
-  // Disabling pullRequest support for the future
-  // app.on(['check_suite.requested', 'check_suite.rerequested'], (context) => {
-  //   return callHandlerWithTiming(context, app, handleCheckSuite)
-  // })
-  // app.on(['pull_request.opened', 'pull_request.reopened'], (context) => {
-  //   return callHandlerWithTiming(context, app, handlePull)
-  // })
+  app.on(['check_suite.requested', 'check_suite.rerequested'], (context) => {
+    return callHandlerWithTiming(context, app, handleCheckSuite)
+  })
+  app.on(['pull_request.opened', 'pull_request.reopened'], (context) => {
+    return callHandlerWithTiming(context, app, handlePull)
+  })
   app.on(['check_run.created', 'check_run.rerequested'], (context) => {
     return callHandlerWithTiming(context, app, handleCheckRun)
   })
@@ -36,27 +35,14 @@ module.exports = (app) => {
   app.on(['secret_scanning_alert.resolved'], (context) => {
     return callHandlerWithTiming(context, app, handleSecretScanningAlert)
   })
+  app.on(['secret_scanning_alert.created'], (context) => {
+    // We are only interested when an alert is created and push_protection_bypassed is true
+    if (context.payload.alert.push_protection_bypassed === true) {
+      return callHandlerWithTiming(context, app, handleSecretScanningAlert)
+    }
+  })
 }
 function callHandlerWithTiming (context, app, handler) {
-  // let id = ''
-
-  // switch (context.name) {
-  //   case 'check_run':
-  //     id += context.payload.check_run.url
-  //     break
-  //   case 'check_suite':
-  //     id += context.payload.check_suite.url
-  //     break
-  //   case 'pull_request':
-  //     id += context.payload.pull_request.url
-  //     break
-  //   case 'repository_dispatch':
-  //     id += context.payload.action
-  //     break
-  //   case 'code_scanning_alert':
-  //     id += context.payload.alert.url
-  //     break
-  // }
   const start = Date.now()
   const logger = app.log.child({
     traceId: context.id,
