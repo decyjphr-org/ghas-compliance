@@ -32,7 +32,8 @@ describe('Secret Scanning Alert Test', function () {
     repoContents.content = encodedConfig
     const securityManagers = JSON.parse(JSON.stringify(require('../../fixtures/securitymanagers.api.json')))
     const teamMembershipsForUser = JSON.parse(JSON.stringify(require('../../fixtures/securitymanagers.api.json')))
-    
+    const secretScanningAlerts = require('../../fixtures/secretscanning_alerts.api')
+
 
     repoContents.content = encodedConfig
     githubScope
@@ -56,6 +57,13 @@ describe('Secret Scanning Alert Test', function () {
     .reply(200, teamMembershipsForUser)
     .patch('/repos/decyjphr-org/decyjphr-ado-migration2/secret-scanning/alerts/8')
     .reply(200)
+    .get('/repos/decyjphr-org/decyjphr-ado-migration2/secret-scanning/alerts?state=open')
+    .reply(200, secretScanningAlerts)
+    .get('/repos/decyjphr-org/decyjphr-ado-migration2/secret-scanning/alerts?state=open&per_page=100')
+    .reply(200, secretScanningAlerts)
+    .patch('/repos/decyjphr-org/decyjphr-ado-migration2/secret-scanning/alerts/2')
+    .reply(200)
+
   })
 
 
@@ -66,7 +74,7 @@ describe('Secret Scanning Alert Test', function () {
     //teardownNock(githubScope)
   })
 
-  it('Test PolicyManager', async () => {
+  it('Test Secret Scanning Alert ', async () => {
     const github = await probot.auth("1")
 
     context = {

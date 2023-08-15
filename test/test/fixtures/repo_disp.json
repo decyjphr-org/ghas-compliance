@@ -1,8 +1,0 @@
-{
-    "action": "ghas-enable",
-    "client_payload": {
-        "createInitialCheck":true,
-        "createBranchProtection":true,
-        "enableAdvSec": true
-    }
-}
